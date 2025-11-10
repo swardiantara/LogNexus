@@ -4,7 +4,7 @@ from lognexus.core import process_logs
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LogNexus: A Foundational Sentence Extraction Tool for Noisy Drone Logs",
+        description="LogNexus: A Foundational Segmentation Tool for Noisy Drone Logs",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument('--input_dir', '-i', type=str, default='./evidence',
