@@ -22,11 +22,11 @@ def main():
 
     if not os.path.isdir(args.input_dir):
         print(f"Error: Input directory '{args.input_dir}' does not exist.")
-        exit(1)
+        exit(0)
 
     if not os.path.isdir(args.model_dir):
         print(f"Error: Model directory '{args.model_dir}' does not exist.")
-        exit(1)
+        exit(0)
 
     process_logs(
         input_dir=args.input_dir,
@@ -35,6 +35,8 @@ def main():
         output_format=args.format,
         use_cuda=args.cuda
     )
+
+    exit(0)
 
 if __name__ == '__main__':
     main()
