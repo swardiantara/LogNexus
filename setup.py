@@ -13,6 +13,9 @@ setup(
         "openpyxl",
         "tqdm",
         "torch"
+        "transformers",
+        "huggingface-hub",
+
     ],
     entry_points={
         'console_scripts': [
