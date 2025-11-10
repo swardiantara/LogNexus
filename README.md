@@ -73,11 +73,12 @@ pip install .
 * **Prepare Model:** Download the pre-trained simpletransformers model files into a folder (default: `./model`).
 
 ```bash
+# use the below command
+lognexus-download
+
+# or, clone the model's Hugging Face repo, and copy all the files to the ./model folder
 git lfs install
 git clone https://huggingface.co/swardiantara/LogNexus-distilbert-base-uncased
-# copy all the files to the ./model folder
-# or, use the below command
-lognexus-download
 ```
 
 * **Prepare Data:** Place your raw `.csv` flight logs in a folder (default: `./evidence`). Logs must have a `APP.tip` and `APP.warning` columns.
@@ -85,9 +86,13 @@ lognexus-download
 ```bash
 # Basic usage (uses defaults: ./evidence -> ./output using ./model)
 lognexus
+# or, if the local installation fail, use below command
+python -m lognexus.cli
 
 # Custom paths and JSON output
 lognexus --input_dir /path/to/logs --output_dir /path/to/results --model_dir /path/to/NER_model --format json
+# or
+python -m lognexus.cli --input_dir /path/to/logs --output_dir /path/to/results --model_dir /path/to/NER_model --format json
 
 # Enable GPU acceleration
 lognexus --cuda
