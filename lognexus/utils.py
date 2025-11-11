@@ -1,53 +1,53 @@
 import re
 import os
 import argparse
-from typing import List, Tuple, Dict
+from typing import List
 from huggingface_hub import snapshot_download
 
 
 def pretokenize_log_message(text: str) -> List[str]:
     """
     Pre-tokenize drone flight log messages for NER-based segmentation.
-    
+
     Rules:
     1. Ensure text ends with punctuation (add period if none)
     2. Remove wrapping quotes (single/double) while preserving apostrophes
     3. Split on space
     4. Keep multiple dots (...) as a single token
     5. Separate specified punctuation (.,;:!?) from tokens
-    
+
     Args:
         text: Raw log message string
-        
+
     Returns:
         List of pre-tokenized strings
     """
     if not text or not text.strip():
         return []
-    
+
     # Step 1: Ensure text ends with punctuation
     text = text.strip()
     if text and text[-1] not in '.!?;:':
         text += '.'
-    
+
     # Step 2: Remove wrapping quotes
     # Remove leading/trailing quotes from the entire text
     text = text.strip('"\'')
-    
+
     # Remove quotes that wrap individual words/phrases
     # But preserve apostrophes (contractions and possessives, including plural possessives)
-    
+
     # Remove opening quotes: space or start followed by quote followed by alphanumeric
     text = re.sub(r'(^|\s)["\'](?=\w)', r'\1', text)
-    
+
     # Remove closing quotes, but NOT apostrophes for possessives
     # Only remove quotes that are NOT preceded by 's' or other letters (to preserve possessives)
     # Pattern: Remove quotes after word characters, but only if NOT forming a possessive
     # We'll be more conservative: only remove quotes that are clearly wrapping (after non-letter or at specific positions)
-    
+
     # Remove double quotes after word characters
     text = re.sub(r'(?<=\w)"(?=\s|[.,;:!?]|$)', '', text)
-    
+
     # Remove single quotes only if they're NOT part of a possessive pattern
     # A possessive pattern is: letter + 's + quote OR letters + quote (plural possessive)
     # So we only remove single quotes that come after non-letter characters or are clearly wrapping
@@ -55,13 +55,13 @@ def pretokenize_log_message(text: str) -> List[str]:
     # (after space/punctuation or at start, before space/punctuation or at end)
     text = re.sub(r"(?<=[.,;:!?\s])'(?=\s|[.,;:!?]|$)", '', text)
     text = re.sub(r"(^)'(?=\s|[.,;:!?]|$)", '', text)
-    
+
     # Step 3: Initial split on space
     tokens = text.split()
-    
+
     # Step 4 & 5: Process each token
     final_tokens = []
-    
+
     for token in tokens:
         # Check if token is just ellipsis or contains ellipsis
         if '...' in token:
@@ -76,10 +76,10 @@ def pretokenize_log_message(text: str) -> List[str]:
         else:
             # Separate specified punctuation
             final_tokens.extend(_separate_punctuation(token))
-    
+
     # Remove any empty strings
     final_tokens = [t for t in final_tokens if t]
-    
+
     return final_tokens
 
 
@@ -88,19 +88,19 @@ def _separate_punctuation(token: str) -> List[str]:
     Separate specified punctuation marks (.,;:!?) from a token.
     Preserves apostrophes within words (including plural possessives).
     Preserves periods in decimal numbers.
-    
+
     Args:
         token: Single token string
-        
+
     Returns:
         List of tokens with punctuation separated
     """
     if not token:
         return []
-    
+
     result = []
     current = ""
-    
+
     for i, char in enumerate(token):
         if char == '.':
             # Check if this period is part of a decimal number
@@ -109,7 +109,7 @@ def _separate_punctuation(token: str) -> List[str]:
             if i > 0 and i < len(token) - 1:
                 if token[i-1].isdigit() and token[i+1].isdigit():
                     is_decimal = True
-            
+
             if is_decimal:
                 # Keep period as part of the number
                 current += char
@@ -132,11 +132,11 @@ def _separate_punctuation(token: str) -> List[str]:
             current += char
         else:
             current += char
-    
+
     # Add any remaining characters
     if current:
         result.append(current)
-    
+
     return result
 
 

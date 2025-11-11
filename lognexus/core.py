@@ -5,22 +5,28 @@ import json
 from tqdm import tqdm
 from lognexus.model import LogNexusModel
 
+
 REQUIRED_COLUMNS = ['date', 'time', 'message']
+
 
 def load_and_extract_log(filepath):
     """
     Reads a raw flight log and extracts only necessary columns.
     Matches columns case-insensitively.
     """
-    # validate the decrypted flight logs
     try:
         with open(filepath, 'r') as file:
             date = []
             time = []
             message_type = []
             message = []
+            first_line = file.readline()
+            if 'CUSTOM.date [local]' not in first_line or 'CUSTOM.updateTime [local]' not in first_line:
+                skiprows = 1
+            else:
+                skiprows = None
 
-            file_df = pd.read_csv(os.path.join(filepath), skiprows=1) # since the first row contains sep=,
+            file_df = pd.read_csv(os.path.join(filepath), skiprows=skiprows) # since the first row contains sep=,
             timeline_df = file_df[['CUSTOM.date [local]', 'CUSTOM.updateTime [local]', 'APP.tip', 'APP.warning']]
             for i, row in timeline_df.iterrows():
                 if not pd.isna(row['APP.tip']):
@@ -71,16 +77,9 @@ def process_logs(input_dir, output_dir, model_path, output_format='xlsx', use_cu
     for file in tqdm(files, desc="Processing"):
         input_path = os.path.join(input_dir, file)
         try:
-            # 1. Load and extract relevant columns from raw log
             df = load_and_extract_log(input_path)
-
-            # 2. Prepare messages
             messages = df['message'].fillna("").astype(str).tolist()
-
-            # 3. Inference
             df['sentence'] = ner_model.predict_sentences(messages)
-
-            # 4. Save Output
             if output_format == 'json':
                 out_file = os.path.splitext(file)[0] + '.json'
                 with open(os.path.join(output_dir, out_file), 'w') as f:

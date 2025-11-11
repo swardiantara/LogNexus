@@ -4,7 +4,9 @@ import json
 from simpletransformers.ner import NERModel
 from lognexus.utils import pretokenize_log_message
 
+
 logging.getLogger("simpletransformers").setLevel(logging.WARNING)
+
 
 class LogNexusModel:
     def __init__(self, model_dir, use_cuda=False):
@@ -12,6 +14,7 @@ class LogNexusModel:
         self.use_cuda = use_cuda
         self.model_type = self._detect_model_type()
         self.model = self._load_model()
+
 
     def _detect_model_type(self):
         """
@@ -28,8 +31,8 @@ class LogNexusModel:
         if not model_type:
              raise ValueError("Could not find 'model_type' in config.json")
 
-        # print(f"[-] Detected model type: {model_type}")
         return model_type
+
 
     def _load_model(self):
         return NERModel(
@@ -39,12 +42,12 @@ class LogNexusModel:
             args={"silent": True}
         )
 
+
     def predict_sentences(self, messages: list) -> list:
         """
         Performs batch prediction and reconstructs sentences.
         """
         tokenized_messages = [pretokenize_log_message(msg) for msg in messages]
-        # tokenized_messages = [log_pre_tokenize(msg)['original_tokens'] for msg in messages]
         predictions, _ = self.model.predict(tokenized_messages, split_on_space=False)
 
         extracted_results = []
@@ -52,6 +55,7 @@ class LogNexusModel:
             extracted_results.append(self._reconstruct_sentences(sentence_preds))
 
         return extracted_results
+
 
     def _reconstruct_sentences(self, token_predictions):
         sentences = []
@@ -63,28 +67,28 @@ class LogNexusModel:
                 token_list.append(word)
                 tag_list.append(tag)
                 if tag == 'O' or word == ';':
-                    # print(f"Unexpected 'O' tag in sentence reconstruction. Skipping token: {word} - {tag}.")
                     continue
                 if tag.startswith("B-") or tag.startswith("S-"):
-                    if current_sent: sentences.append(" ".join(current_sent))
+                    if current_sent:
+                        sentences.append(" ".join(current_sent))
                     current_sent = [word]
                     if tag.startswith("S-"):
-                        # print(f"Unexpected 'S' tag in sentence reconstruction. Skipping token: {word} - {tag}.")
                         sentences.append(" ".join(current_sent))
                         current_sent = []
                 elif tag.startswith("I-") or tag.startswith("E-"):
                     current_sent.append(word)
                     if tag.startswith("E-"):
-                        for next_word, next_tag in token_predictions[i+1].items():
-                            if next_tag == 'O': # check if the next token's tag is an O.
+                        for _, next_tag in token_predictions[i+1].items():
+                            if next_tag == 'O':
                                 sentences.append(" ".join(current_sent))
                                 current_sent = []
                 else:
                      if current_sent:
-                         sentence = " ".join(current_sent)
-                         sentences.append(sentence)
-                         current_sent = []
+                        sentence = " ".join(current_sent)
+                        sentences.append(sentence)
+                        current_sent = []
         if current_sent:
             sentence = " ".join(current_sent)
             sentences.append(sentence)
+            
         return sentences

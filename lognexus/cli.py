@@ -2,6 +2,7 @@ import argparse
 import os
 from lognexus.core import process_logs
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="LogNexus: A Foundational Segmentation Tool for Noisy Drone Logs",
@@ -37,6 +38,7 @@ def main():
     )
 
     exit(0)
+
 
 if __name__ == '__main__':
     main()
