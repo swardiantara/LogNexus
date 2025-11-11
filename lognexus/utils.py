@@ -145,7 +145,7 @@ def download_model_cli():
     CLI entry point for downloading models.
     """
     parser = argparse.ArgumentParser(description="Download the LogNexus NER model from Hugging Face.")
-    parser.add_argument('--model_name', type=str, required=True,
+    parser.add_argument('--model_name', type=str, default="swardiantara/LogNexus-distilbert-base-uncased",
                         help='Hugging Face model ID (e.g., "swardiantara/LogNexus-distilbert-base-uncased")')
     parser.add_argument('--model_dir', type=str, default='./model',
                         help='Local directory to store the model files.')

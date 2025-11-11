@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lognexus"
+version = "1.1.0"
+authors = [
+  { name="Swardiantara Silalahi", email="swardyantara@gmail.com" },
+]
+description = "A foundational sentence extraction tool for noisy drone logs."
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["lognexus", "forensics", "drone", "logs", "nlp", "ner"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Digital Forensics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+# --- Dependencies ---
+dependencies = [
+    "simpletransformers>=0.70.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.0.0",
+    "tqdm>=4.60.0",
+    "torch>=2.0.0",
+    "transformers>=4.40.0",
+    "huggingface_hub>=0.31.0"
+]
+
+# --- Scripts ---
+[project.scripts]
+lognexus = "lognexus.cli:main"
+lognexus-download = "lognexus.utils:download_model_cli"
+
+# --- Links ---
+[project.urls]
+Homepage = "https://github.com/swardiantara/LogNexus"
+Issues = "https://github.com/swardiantara/LogNexus/issues"
+
+# --- Tool Configuration ---
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lognexus*"]
+exclude = ["tests*"]

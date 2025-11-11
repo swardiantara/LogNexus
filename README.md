@@ -113,15 +113,20 @@ Duplicate rows are created for messages containing multiple sentences to allow f
 ```json
 [
   {
-    "date": "2024-01-01",
-    "time": "12:00:01",
-    "message": "Battery Error. Landing.",
+    "date": "5/12/2025",
+    "time": "8:27:36.34 AM",
+    "message": "Failsafe RTH.; Press Brake button to cancel RTH.; RC signal lost. Returning to home.; RC signal weak. Avoid blocking antennas and adjust antenna orientation.; Downlink Restored (after 0m 5.8s).; Flight mode changed to Go Home.",
     "sentence": [
-      "Battery Error",
-      "Landing"
+      "Failsafe RTH",
+      "Press Brake button to cancel RTH",
+      "RC signal lost",
+      "Returning to home",
+      "RC signal weak",
+      "Avoid blocking antennas and adjust antenna orientation",
+      "Downlink Restored (after 0m 5.8s)",
+      "Flight mode changed to Go Home"
     ]
   },
-  ...,
 ]
 ```
 
@@ -132,11 +137,11 @@ If you use LogNexus in your research, please cite:
 ```bib
 @article{Silalahi2025LogNexus,
 title = {LogNexus: A Foundational Segmentation Tool for Noisy Drone Logs},
-journal = {Software Impacts},
+publisher = {Code Ocean},
 volume = {},
 pages = {},
 year = {2025},
-issn = {2665-9638},
+note = {[Source Code]}
 author = {Swardiantara Silalahi and Tohari Ahmad and Hudan Studiawan},
 }
 ```
