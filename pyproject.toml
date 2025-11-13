@@ -8,7 +8,7 @@ version = "1.1.0"
 authors = [
   { name="Swardiantara Silalahi", email="swardyantara@gmail.com" },
 ]
-description = "A foundational sentence extraction tool for noisy drone logs."
+description = "LogNexus: A Foundational Segmentation Tool for Drone Flight Log Messages"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["lognexus", "forensics", "drone", "logs", "nlp", "ner"]

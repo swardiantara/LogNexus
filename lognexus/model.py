@@ -15,7 +15,6 @@ class LogNexusModel:
         self.model_type = self._detect_model_type()
         self.model = self._load_model()
 
-
     def _detect_model_type(self):
         """
         Reads the 'config.json' in the model directory to find the 'model_type'.
@@ -29,10 +28,9 @@ class LogNexusModel:
 
         model_type = config.get("model_type")
         if not model_type:
-             raise ValueError("Could not find 'model_type' in config.json")
+            raise ValueError("Could not find 'model_type' in config.json")
 
         return model_type
-
 
     def _load_model(self):
         return NERModel(
@@ -41,7 +39,6 @@ class LogNexusModel:
             use_cuda=self.use_cuda,
             args={"silent": True}
         )
-
 
     def predict_sentences(self, messages: list) -> list:
         """
@@ -55,7 +52,6 @@ class LogNexusModel:
             extracted_results.append(self._reconstruct_sentences(sentence_preds))
 
         return extracted_results
-
 
     def _reconstruct_sentences(self, token_predictions):
         sentences = []
@@ -83,12 +79,12 @@ class LogNexusModel:
                                 sentences.append(" ".join(current_sent))
                                 current_sent = []
                 else:
-                     if current_sent:
+                    if current_sent:
                         sentence = " ".join(current_sent)
                         sentences.append(sentence)
                         current_sent = []
         if current_sent:
             sentence = " ".join(current_sent)
             sentences.append(sentence)
-            
+
         return sentences

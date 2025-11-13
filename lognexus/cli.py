@@ -5,7 +5,7 @@ from lognexus.core import process_logs
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LogNexus: A Foundational Segmentation Tool for Noisy Drone Logs",
+        description="LogNexus: A Foundational Segmentation Tool for Drone Flight Log Messages",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument('--input_dir', '-i', type=str, default='./evidence',
@@ -14,7 +14,7 @@ def main():
                         help='Directory to save processed logs.')
     parser.add_argument('--model_dir', '-m', type=str, default='./model',
                         help='Directory containing the trained simpletransformers model.')
-    parser.add_argument('--format', '-f', type=str, choices=['xlsx', 'json'], default='xlsx',
+    parser.add_argument('--format', '-f', type=str, choices=['xlsx', 'json'], default='json',
                         help='Output format: Excel (with duplicate rows for sentences) or JSON (nested list).')
     parser.add_argument('--cuda', action='store_true',
                         help='Enable GPU acceleration for inference.')

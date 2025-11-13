@@ -26,7 +26,7 @@ def load_and_extract_log(filepath):
             else:
                 skiprows = None
 
-            file_df = pd.read_csv(os.path.join(filepath), skiprows=skiprows) # since the first row contains sep=,
+            file_df = pd.read_csv(os.path.join(filepath), skiprows=skiprows)
             timeline_df = file_df[['CUSTOM.date [local]', 'CUSTOM.updateTime [local]', 'APP.tip', 'APP.warning']]
             for i, row in timeline_df.iterrows():
                 if not pd.isna(row['APP.tip']):
@@ -47,7 +47,7 @@ def load_and_extract_log(filepath):
             })
 
             return parsed_df[REQUIRED_COLUMNS].copy()
-            
+
     except FileNotFoundError:
         print(f"Error: The file '{filepath}' was not found.")
 

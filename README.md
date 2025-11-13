@@ -1,11 +1,11 @@
-# LogNexus
+# LogNexus: A Foundational Segmentation Tool for Drone Flight Log Messages
 
-**LogNexus** is a foundational sentence extraction tool designed specifically for noisy, unstructured drone flight logs. It utilizes a specialized Named Entity Recognition (NER) model to robustly segment log messages into semantically whole sentences, enabling high-precision downstream forensic analysis.
+**LogNexus** is a foundational sentence extraction tool designed specifically for noisy, unstructured drone flight log messages. It utilizes a specialized named entity recognition (NER) model (DistilBERT-base-uncased) to segment log messages into semantically whole sentences, enabling high-precision downstream forensic analyses.
 
 ## Features
 
-* **Robust Segmentation:** Handles inconsistent punctuation and casing common in drone flight log messages.
-* **Batch Processing:** Automatically processes all Excel log files in a specified input directory.
+* **Robust Segmentation:** Handles inconsistent punctuation and case-folding common in drone flight log messages.
+* **Batch Processing:** Automatically processes all (decrypted) flight log files in a specified input directory.
 * **Flexible Output:** Exports to Excel (exploded rows for easy filtering) or JSON (nested structure for programmatic use).
 * **GPU Support:** Optional CUDA acceleration for faster inference on large datasets.
 
@@ -81,7 +81,7 @@ git lfs install
 git clone https://huggingface.co/swardiantara/LogNexus-distilbert-base-uncased
 ```
 
-* **Prepare Data:** Place your raw `.csv` flight logs in a folder (default: `./evidence`). Logs must have a `APP.tip` and `APP.warning` columns.
+* **Prepare Data:** Place your raw `.csv` flight logs in a folder (default: `./evidence`). Logs must have `APP.tip` and `APP.warning` columns.
 * **Run LogNexus:**
 ```bash
 # Basic usage (uses defaults: ./evidence -> ./output using ./model)
@@ -135,8 +135,8 @@ Duplicate rows are created for messages containing multiple sentences to allow f
 ### Citation
 If you use LogNexus in your research, please cite:
 ```bib
-@article{Silalahi2025LogNexus,
-title = {LogNexus: A Foundational Segmentation Tool for Noisy Drone Logs},
+@misc{Silalahi2025LogNexus,
+title = {LogNexus: A Foundational Segmentation Tool for Drone Flight Log Messages},
 publisher = {Code Ocean},
 volume = {},
 pages = {},
