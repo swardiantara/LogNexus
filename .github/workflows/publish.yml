@@ -1,71 +1,75 @@
-name: Publish Python Package
+name: Publish package with Trusted Publishing
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main"]   # triggers TestPyPI publish
   release:
-    types: ["published"]
+    types: [published]    # triggers PyPI publish
+
+permissions:
+  id-token: write      # REQUIRED for trusted publishing
+  contents: read       # to read the repo
 
 jobs:
-
-  # ============== Build package ==============
   build:
-    name: Build distribution
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install build backend
-        run: pip install build
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
 
-      - name: Build package
+      - name: Build package (sdist + wheel)
         run: python -m build
 
-      - name: Upload dist/ as artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: python-dist
+          name: dist
           path: dist/
 
-  # ============== Publish to TestPyPI ==============
-  testpypi-publish:
-    name: Publish to TestPyPI
+  publish-testpypi:
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: python-dist
-          path: dist/
+          name: dist
+          path: dist
 
-      - name: Publish to TestPyPI
+      - name: Publish to TestPyPI using Trusted Publishing
         uses: pypa/gh-action-pypi-publish@v1.9.0
         with:
           repository-url: https://test.pypi.org/legacy/
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
 
-  # ============== Publish to real PyPI ==============
-  pypi-publish:
-    name: Publish to PyPI
+  publish-pypi:
     needs: build
-    runs-on: ubuntu-latest
     if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: python-dist
-          path: dist/
+          name: dist
+          path: dist
 
-      - name: Publish to PyPI
+      - name: Publish to PyPI using Trusted Publishing
         uses: pypa/gh-action-pypi-publish@v1.9.0
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
