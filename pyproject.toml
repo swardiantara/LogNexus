@@ -1,24 +1,31 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=7.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "lognexus"
-version = "1.1.0"
-authors = [
-  { name="Swardiantara Silalahi", email="swardyantara@gmail.com" },
-]
+dynamic = ["version"]   # version auto-generated from Git tag
 description = "LogNexus: A Foundational Segmentation Tool for Drone Flight Log Messages"
 readme = "README.md"
 requires-python = ">=3.9"
-keywords = ["lognexus", "forensics", "drone", "logs", "nlp", "ner"]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Topic :: Digital Forensics",
-    "Topic :: Scientific/Engineering :: Information Analysis",
+license = { file = "LICENSE" }
+
+authors = [
+  { name="Swardiantara Silalahi", email="swardyantara@gmail.com" },
 ]
 
-# --- Dependencies ---
+keywords = ["lognexus", "forensics", "drone", "logs", "nlp", "ner"]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Digital Forensics",
+    "Topic :: Scientific/Engineering :: Information Extraction",
+]
+
 dependencies = [
     "simpletransformers>=0.70.0",
     "pandas>=2.0.0",
@@ -29,18 +36,18 @@ dependencies = [
     "huggingface_hub>=0.31.0"
 ]
 
-# --- Scripts ---
 [project.scripts]
 lognexus = "lognexus.cli:main"
 lognexus-download = "lognexus.utils:download_model_cli"
 
-# --- Links ---
 [project.urls]
 Homepage = "https://github.com/swardiantara/LogNexus"
 Issues = "https://github.com/swardiantara/LogNexus/issues"
 
-# --- Tool Configuration ---
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["lognexus*"]
 exclude = ["tests*"]
+
+[tool.setuptools_scm]
+write_to = "lognexus/_version.py"
