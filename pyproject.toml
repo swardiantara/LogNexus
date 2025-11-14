@@ -33,7 +33,8 @@ dependencies = [
     "tqdm>=4.60.0",
     "torch>=2.0.0",
     "transformers>=4.40.0",
-    "huggingface_hub>=0.31.0"
+    "huggingface_hub>=0.31.0",
+    "setuptools-scm"
 ]
 
 [project.scripts]
