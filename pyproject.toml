@@ -1,5 +1,7 @@
 [build-system]
-requires = ["setuptools>=61.0", "setuptools_scm[toml]>=7.0"]
+# Pin setuptools to <68 to avoid producing Metadata-Version 2.4 which some
+# older upload/check tooling (used by CI actions) may not parse yet.
+requires = ["setuptools>=61.0,<68", "setuptools_scm[toml]>=7.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
